@@ -1,0 +1,7 @@
+cover_jobby/artifacts/*
+
+.DS_Store
+
+.idea/.gitignore
+
+cover_jobby.egg-info/*

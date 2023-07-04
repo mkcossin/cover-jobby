@@ -1,0 +1,13 @@
+[project]
+name = "cover-jobby"
+version = "0.0.1"
+dependencies = [
+    "requests"
+]
+
+[project.optional-dependencies]
+dev = [
+    "requests",
+    "python-slugify",
+    "pillow"
+]
