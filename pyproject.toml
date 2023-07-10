@@ -2,7 +2,7 @@
 name = "cover-jobby"
 description = "Builds some shit"
 authors = ["Matt Cossin"]
-version = "0.0.2"
+version = "0.1.0"
 
 
 
