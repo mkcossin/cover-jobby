@@ -13,16 +13,12 @@
 
 ## Dependencies
 
-* requests
-* pillow
-* python-slugify
+`poetry install --with dev`
 
 ## Output
 
 Builds images in the `./cover_jobby/artifacts` directory
 
 ## Usage
-
-`pip install -e ".[dev]"`
 
 `python cover_jobby/cover_jobby.py --book-list book_list.csv`
