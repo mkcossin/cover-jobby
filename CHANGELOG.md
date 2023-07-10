@@ -1,3 +1,9 @@
+## 0.5.0 (2023-07-10)
+
+### Feat
+
+- **artifacts**: change back cover to rotated version
+
 ## 0.4.0 (2023-07-10)
 
 ### Feat
