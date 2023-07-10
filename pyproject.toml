@@ -1,13 +1,21 @@
-[project]
+[tool.poetry]
 name = "cover-jobby"
-version = "0.0.1"
-dependencies = [
-    "requests"
-]
+description = "Builds some shit"
+authors = ["Matt Cossin"]
+version = "0.0.2"
 
-[project.optional-dependencies]
-dev = [
-    "requests",
-    "python-slugify",
-    "pillow"
-]
+
+
+[tool.poetry.dependencies]
+python = "=3.11.4"
+requests = "^2.31.0"
+python-slugify = "^8.0.1"
+pillow = "^10.0.0"
+poetry = "^1.5.1"
+
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+commitizen = "^3.5.2"
