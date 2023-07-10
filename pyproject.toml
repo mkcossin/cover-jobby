@@ -20,5 +20,5 @@ optional = true
 commitizen = "^3.5.2"
 
 [tool.commitizen]
-version = "0.2.0"
+version = "0.2.1"
 update_changelog_on_bump = true
