@@ -1,3 +1,9 @@
+## 0.4.0 (2023-07-10)
+
+### Feat
+
+- **artifacts**: create stacked image with all covers
+
 ## 0.3.0 (2023-07-10)
 
 ### Feat
