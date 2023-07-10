@@ -28,3 +28,6 @@ MANIFEST
 .idea/.gitignore
 
 cover_jobby.egg-info/*
+
+*.zip
+*.csv
