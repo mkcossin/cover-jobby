@@ -8,6 +8,25 @@ from PIL import Image
 from collections import Counter
 
 
+def stack_images(image_list, output_path):
+
+    stacked_image = Image.new("RGB", (300,0), (0,0,0))
+
+
+    for image_path in image_list:
+        image = Image.open(image_path)
+        image_height = image.height
+
+        original_image = stacked_image
+
+        stacked_image = Image.new("RGB", (original_image.width, original_image.height + image_height), (0,0,0))
+
+        stacked_image.paste(original_image, (0,0))
+
+        stacked_image.paste(image,(0,original_image.height))
+
+    stacked_image.save(output_path)
+
 def merge_images(image1_path, image2_path, output_path):
     image1 = Image.open(image1_path)
     image2 = Image.open(image2_path)
@@ -86,6 +105,8 @@ def read_book_list(input_file):
 def main(args):
     book_list = read_book_list(args.book_list)
 
+    image_list = []
+
     for book in book_list:
         title = book['title'].lower()
         author_first_name = book['first_name'].lower()
@@ -133,7 +154,9 @@ def main(args):
         # cover size: .64"W x .87H
         # spine size: .125"W x .87H
 
+        image_list.append(full_cover_target)
 
+    stack_images(image_list, "./cover_jobby/artifacts/all_covers.jpg")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Cover Jobby')
