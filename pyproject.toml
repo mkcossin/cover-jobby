@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cover-jobby"
-description = "Builds some shit"
+description = "Inputs list of books and downloads thumbnail images"
 authors = ["Matt Cossin"]
 
 
