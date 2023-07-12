@@ -2,7 +2,7 @@
 name = "cover-jobby"
 description = "Inputs list of books and downloads thumbnail images"
 authors = ["Matt Cossin"]
-
+version = "0.5.0"
 
 
 [tool.poetry.dependencies]

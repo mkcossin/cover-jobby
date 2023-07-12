@@ -1,10 +1,54 @@
 import requests
 import argparse
 import csv
+import shutil
 
 from slugify import slugify
 from PIL import Image
 from collections import Counter
+
+
+def zip_images(output_file_path):
+    shutil.make_archive(output_file_path, 'zip', './cover_jobby/artifacts')
+
+def put_images_into_array(image_list, output_path):
+    row_count = 0
+    column_count = 0
+
+    max_columns = 4
+
+    array_image = Image.new("RGB", (300 * max_columns, 215), (255, 255, 255))
+
+    for image_path in image_list:
+        image = Image.open(image_path)
+
+        original_image = array_image
+
+
+        if column_count >= max_columns:
+            row_count = row_count + 1
+            column_count = 0
+            new_height = original_image.height + 215
+        else:
+            new_height = original_image.height
+
+        array_image = Image.new(
+            "RGB",
+            (original_image.width, new_height),
+            (255, 255, 255)
+        )
+
+        array_image.paste(original_image, (0, 0))
+
+        image_location = (column_count * 300, row_count * 215)
+
+        array_image.paste(image, image_location)
+
+        print("Pasting image at {}, {}, {}".format(image_location, column_count, row_count))
+
+        column_count = column_count + 1
+
+    array_image.save(output_path)
 
 
 def stack_images(image_list, output_path):
@@ -69,7 +113,7 @@ def create_image_with_single_color(size, color, output_path):
 
 
 def rotate_image(image_path, output_path):
-    new_image = Image.open(image_path).rotate(180)
+    new_image = Image.open(image_path).rotate(180, resample=Image.BICUBIC, expand=True)
     new_image.save(output_path)
     print("Image rotated successfully")
 
@@ -192,23 +236,31 @@ def main(args):
             )
         )
 
+        resize_jpeg(cover_target, resize_target, 128, 200)
+
         # create_image_with_single_color((size[0] + 25,size[1]), most_common_color, back_cover_target)
         # merge_images(back_cover_target, cover_target, full_cover_target)
         # cover size: .64"W x .87H
         # spine size: .125"W x .87H
 
-        rotate_image(cover_target, back_cover_target)
+        rotate_image(resize_target, back_cover_target)
 
-        join_covers_with_spine(cover_target, back_cover_target, full_cover_target, 30, most_common_color)
+        join_covers_with_spine(resize_target, back_cover_target, full_cover_target, 30, most_common_color)
 
         image_list.append(full_cover_target)
 
-    stack_images(image_list, "./cover_jobby/artifacts/all_covers.jpg")
+    stack_images(image_list, "./cover_jobby/artifacts/all_covers_stacked.jpg")
+    put_images_into_array(image_list, "./cover_jobby/artifacts/all_covers_array.jpg")
+
+    if(args.zip_file is not None):
+        zip_images(args.zip_file)
+
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Cover Jobby")
     parser.add_argument("--book-list", type=str, help="path to the book list")
+    parser.add_argument("--zip-file", type=str, help="path for optional zip file")
 
     args = parser.parse_args()
 
