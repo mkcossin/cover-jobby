@@ -1,3 +1,9 @@
+## 0.6.0 (2023-07-12)
+
+### Feat
+
+- stopping point during show and tell
+
 ## 0.5.0 (2023-07-10)
 
 ### Feat
