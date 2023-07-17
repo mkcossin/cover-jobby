@@ -8,14 +8,48 @@ from PIL import Image
 from collections import Counter
 
 
+def get_average_rgb(image_path):
+    # Open the image
+    image = Image.open(image_path)
+
+    # Convert the image to RGB mode if it's not already
+    image = image.convert('RGB')
+
+    # Get the width and height of the image
+    width, height = image.size
+
+    # Initialize variables to store total RGB values
+    total_red = 0
+    total_green = 0
+    total_blue = 0
+
+    # Iterate over each pixel in the image
+    for y in range(height):
+        for x in range(width):
+            # Get the RGB values of the pixel
+            red, green, blue = image.getpixel((x, y))
+
+            # Add the RGB values to the totals
+            total_red += red
+            total_green += green
+            total_blue += blue
+
+    # Calculate the average RGB values
+    num_pixels = width * height
+    avg_red = total_red // num_pixels
+    avg_green = total_green // num_pixels
+    avg_blue = total_blue // num_pixels
+
+    # Return the average RGB values
+    return avg_red, avg_green, avg_blue
 def zip_images(output_file_path):
     shutil.make_archive(output_file_path, 'zip', './cover_jobby/artifacts')
 
-def put_images_into_array(image_list, output_path):
+def put_images_into_array(image_list, output_path, array_width, array_height):
     row_count = 0
     column_count = 0
 
-    max_columns = 4
+    max_columns = array_width
 
     array_image = Image.new("RGB", (300 * max_columns, 215), (255, 255, 255))
 
@@ -230,9 +264,11 @@ def main(args):
 
         size, most_common_color, count = get_most_common_color_and_size(cover_target)
 
+        avg_red, avg_green, avg_blue = get_average_rgb(cover_target)
+
         print(
-            "----Most Common Color is {} with {} occurrences".format(
-                most_common_color, count
+            "----Average Color is {} with {} occurrences".format(
+                (avg_red, avg_green, avg_blue), count
             )
         )
 
@@ -245,12 +281,13 @@ def main(args):
 
         rotate_image(resize_target, back_cover_target)
 
-        join_covers_with_spine(resize_target, back_cover_target, full_cover_target, 30, most_common_color)
+        join_covers_with_spine(resize_target, back_cover_target, full_cover_target, 30, (avg_red, avg_green, avg_blue))
 
         image_list.append(full_cover_target)
 
     stack_images(image_list, "./cover_jobby/artifacts/all_covers_stacked.jpg")
-    put_images_into_array(image_list, "./cover_jobby/artifacts/all_covers_array.jpg")
+
+    put_images_into_array(image_list, "./cover_jobby/artifacts/all_covers_array.jpg", 6, 10)
 
     if(args.zip_file is not None):
         zip_images(args.zip_file)

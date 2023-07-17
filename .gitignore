@@ -26,6 +26,7 @@ MANIFEST
 .DS_Store
 
 .idea/.gitignore
+.idea/
 
 cover_jobby.egg-info/*
 
