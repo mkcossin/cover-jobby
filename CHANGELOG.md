@@ -1,3 +1,9 @@
+## 0.7.0 (2023-07-17)
+
+### Feat
+
+- **array-builder**: add width parameter and implement average color
+
 ## 0.6.0 (2023-07-12)
 
 ### Feat
