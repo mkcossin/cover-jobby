@@ -1,3 +1,9 @@
+## 0.7.1 (2023-07-17)
+
+### Refactor
+
+- py project testing
+
 ## 0.7.0 (2023-07-17)
 
 ### Feat
