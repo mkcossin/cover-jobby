@@ -1,3 +1,9 @@
+## 0.8.0 (2023-07-18)
+
+### Feat
+
+- add dbt project version for testing
+
 ## 0.7.1 (2023-07-17)
 
 ### Refactor
