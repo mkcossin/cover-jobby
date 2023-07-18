@@ -23,5 +23,6 @@ commitizen = "^3.5.2"
 version = "0.7.1"
 update_changelog_on_bump = true
 version_files = [
-    "pyproject.toml:^version"
+    "pyproject.toml:^version",
+    "dbt_project.yml:^version"
 ]
