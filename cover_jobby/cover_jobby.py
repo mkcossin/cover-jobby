@@ -233,31 +233,44 @@ def download_picture(url, save_path):
     else:
         logging.error("Failed to download picture:", response.status_code)
 
-def search_book_api(title, author_fname, author_lname):
-    logging.debug(
-        "Searching Google Books API for {} by {} {}".format(
-            title, author_fname, author_lname
-        )
-    )
+def search_book_api(title, author_fname, author_lname, id):
+    
     url = "https://www.googleapis.com/books/v1/volumes"
 
-    author_lname = author_lname.strip().lower()
-    author_fname = author_fname.strip().lower()
-    title = title.strip().lower()
+    param_string = ""
+    params = ""
 
-    if author_lname != "" and author_lname is not None:
-        param_string = "intitle:{}+inauthor:{}".format(title, author_lname)
+    if id is not None:
+        logging.debug("Searching Google Books API for ID = {}".format(id))
+
+        url = url + "/{}".format(id)
+        #param_string = "id:{}".format(id)
+  
+        
     else:
-        param_string = "intitle:{}".format(title)
+        logging.debug(
+            "Searching Google Books API for {} by {} {}".format(
+                title, author_fname, author_lname
+            )
+        )
 
-    params = {"q": param_string}
+        author_lname = author_lname.strip().lower()
+        author_fname = author_fname.strip().lower()
+        title = title.strip().lower()
+
+        if author_lname != "" and author_lname is not None:
+            param_string = "intitle:{}+inauthor:{}".format(title, author_lname)
+        else:
+            param_string = "intitle:{}".format(title)
+
+        params = {"q": param_string}
 
     try:
         response_json = requests.get(url, params=params).json()
     except Exception as e:
         logging.error("Failed getting response from Google API - {}".format(e)) 
         return None
-
+    #logging.debug(response_json)
     return response_json
 
 def read_book_list(input_file):
@@ -285,11 +298,14 @@ def main(args):
         title = book["title"].lower()
         author_first_name = book["first_name"].lower()
         author_last_name = book["last_name"].lower()
+        override = book["override"]
 
         print("** Searching for {}, by {} {}".format(title, author_first_name, author_last_name))
-        find_book = search_book_api(title, author_first_name, author_last_name)
+        find_book = search_book_api(title, author_first_name, author_last_name, override)
 
-        if find_book != None:
+        if find_book != None and override is not None:
+            num_results = 1
+        elif find_book != None:
             num_results = find_book["totalItems"]
         else:
             num_results = None
@@ -297,17 +313,22 @@ def main(args):
         if num_results == 0 or num_results == None:
             logging.error("BOOK NOT FOUND -- {} by {} {}".format(title, author_first_name, author_last_name))
         else:
-            volumes = find_book["items"]
+            volumes = [find_book] if override is not None else find_book["items"]
 
             first_result = volumes[0]
 
             logging.debug("--found {}".format(num_results))
+
 
             fr_id = first_result["id"]
             fr_vol_info = first_result["volumeInfo"]
 
             fr_title = fr_vol_info["title"]
             fr_authors = fr_vol_info["authors"]
+
+            fr_canonical_link = fr_vol_info["canonicalVolumeLink"]
+
+            logging.debug("--found canonical link {}".format(fr_canonical_link))
 
             fr_image_links = fr_vol_info["imageLinks"]
             fr_image_thumbnail = str.replace(fr_image_links["thumbnail"], "&edge=curl", "")
